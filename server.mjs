@@ -3,7 +3,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import {handleApi} from './dist/server/index.js';
 const root=resolve('dist/client');
-const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2'};
+const mime={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.woff2':'font/woff2','.wasm':'application/wasm'};
 const storage={async put(key,value){const file=resolve('.local-data',key);await mkdir(resolve(file,'..'),{recursive:true});await writeFile(file,value,{mode:0o600});}};
 http.createServer(async(req,res)=>{
  try {
