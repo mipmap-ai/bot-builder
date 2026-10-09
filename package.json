@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs",
-    "build:photo": "node scripts/build-photo.mjs"
+    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs",
+    "build:photo": "node scripts/build-photo.mjs",
+    "build:rabbit": "node scripts/build-rabbit.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",

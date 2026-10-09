@@ -1,0 +1,232 @@
+[
+  {
+    "name": "default",
+    "spec": {},
+    "hash": "e16dbd78b82ae4275528d8468fe9c59d65dbf12eb3089eff4841110ce08915de"
+  },
+  {
+    "name": "saved portrait URL",
+    "spec": {
+      "head": {
+        "skin": "#CBA688"
+      },
+      "hair": {
+        "type": "ponytail",
+        "color": "#3B2B26"
+      },
+      "outfit": {
+        "type": "blouse",
+        "color": "#F4EDE2"
+      }
+    },
+    "hash": "0ed87d19684aaf4e691dfa1f416f5e1e6a47733a5384ae4e35263c55a216e72e"
+  },
+  {
+    "name": "classic/bot",
+    "spec": {
+      "head": {
+        "shape": "classic"
+      },
+      "character": {
+        "type": "bot"
+      }
+    },
+    "hash": "e16dbd78b82ae4275528d8468fe9c59d65dbf12eb3089eff4841110ce08915de"
+  },
+  {
+    "name": "classic/ghost",
+    "spec": {
+      "head": {
+        "shape": "classic"
+      },
+      "character": {
+        "type": "ghost"
+      }
+    },
+    "hash": "3947a489cb25128ffca4c5e2ce281a53bb2372b066db2dde8d6dea8bf294000f"
+  },
+  {
+    "name": "classic/cat",
+    "spec": {
+      "head": {
+        "shape": "classic"
+      },
+      "character": {
+        "type": "cat"
+      }
+    },
+    "hash": "30d1cebf02edef61baf227dfeec24e37b907ccd3e95a7a95b819d04e69286594"
+  },
+  {
+    "name": "classic/muni",
+    "spec": {
+      "head": {
+        "shape": "classic"
+      },
+      "character": {
+        "type": "muni"
+      }
+    },
+    "hash": "f86b92081cf21ac27c6d58a18fb83179e4d78f962371edcb811c0a417492d963"
+  },
+  {
+    "name": "mochi/bot",
+    "spec": {
+      "head": {
+        "shape": "mochi"
+      },
+      "character": {
+        "type": "bot"
+      }
+    },
+    "hash": "397d2e85d35447c95bec09142951fc5a501fa4a87d25325f32e780f775e406ea"
+  },
+  {
+    "name": "mochi/ghost",
+    "spec": {
+      "head": {
+        "shape": "mochi"
+      },
+      "character": {
+        "type": "ghost"
+      }
+    },
+    "hash": "3947a489cb25128ffca4c5e2ce281a53bb2372b066db2dde8d6dea8bf294000f"
+  },
+  {
+    "name": "mochi/cat",
+    "spec": {
+      "head": {
+        "shape": "mochi"
+      },
+      "character": {
+        "type": "cat"
+      }
+    },
+    "hash": "30d1cebf02edef61baf227dfeec24e37b907ccd3e95a7a95b819d04e69286594"
+  },
+  {
+    "name": "mochi/muni",
+    "spec": {
+      "head": {
+        "shape": "mochi"
+      },
+      "character": {
+        "type": "muni"
+      }
+    },
+    "hash": "f86b92081cf21ac27c6d58a18fb83179e4d78f962371edcb811c0a417492d963"
+  },
+  {
+    "name": "squircle/bot",
+    "spec": {
+      "head": {
+        "shape": "squircle"
+      },
+      "character": {
+        "type": "bot"
+      }
+    },
+    "hash": "44033e53ff5c617719519bee7408faba7ffa5891b7543bbe91bce5d72629ebb6"
+  },
+  {
+    "name": "squircle/ghost",
+    "spec": {
+      "head": {
+        "shape": "squircle"
+      },
+      "character": {
+        "type": "ghost"
+      }
+    },
+    "hash": "3947a489cb25128ffca4c5e2ce281a53bb2372b066db2dde8d6dea8bf294000f"
+  },
+  {
+    "name": "squircle/cat",
+    "spec": {
+      "head": {
+        "shape": "squircle"
+      },
+      "character": {
+        "type": "cat"
+      }
+    },
+    "hash": "30d1cebf02edef61baf227dfeec24e37b907ccd3e95a7a95b819d04e69286594"
+  },
+  {
+    "name": "squircle/muni",
+    "spec": {
+      "head": {
+        "shape": "squircle"
+      },
+      "character": {
+        "type": "muni"
+      }
+    },
+    "hash": "f86b92081cf21ac27c6d58a18fb83179e4d78f962371edcb811c0a417492d963"
+  },
+  {
+    "name": "pebble/bot",
+    "spec": {
+      "head": {
+        "shape": "pebble"
+      },
+      "character": {
+        "type": "bot"
+      }
+    },
+    "hash": "40c393b5fa5c5189d10f12294488eaf98499d780486d59634fcdd2e3761274f2"
+  },
+  {
+    "name": "pebble/ghost",
+    "spec": {
+      "head": {
+        "shape": "pebble"
+      },
+      "character": {
+        "type": "ghost"
+      }
+    },
+    "hash": "3947a489cb25128ffca4c5e2ce281a53bb2372b066db2dde8d6dea8bf294000f"
+  },
+  {
+    "name": "pebble/cat",
+    "spec": {
+      "head": {
+        "shape": "pebble"
+      },
+      "character": {
+        "type": "cat"
+      }
+    },
+    "hash": "30d1cebf02edef61baf227dfeec24e37b907ccd3e95a7a95b819d04e69286594"
+  },
+  {
+    "name": "pebble/muni",
+    "spec": {
+      "head": {
+        "shape": "pebble"
+      },
+      "character": {
+        "type": "muni"
+      }
+    },
+    "hash": "f86b92081cf21ac27c6d58a18fb83179e4d78f962371edcb811c0a417492d963"
+  },
+  {
+    "name": "colored eyes and hair",
+    "spec": {
+      "eyes": {
+        "color": "#4B88C9"
+      },
+      "hair": {
+        "type": "long-waves",
+        "color": "#B8683E"
+      },
+      "outfit": {
+        "type": "jacket"
+      }
+    },
+    "hash": "337765d0c1bb03b2af316edf453ab49db0fe09f4b67bc5d430c2116f58c576f4"
+  }
+]

@@ -42,3 +42,5 @@ Local model assets use Google's pinned model version 1:
 - https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
 
 Known limits: lighting correction is approximate, the part library has limited face and hair shapes, and tiny or covered eyes retain the current eye color.
+
+Rabbit is an additional character under Head. Its URL value is `character=rabbit`. Existing character IDs, defaults, and palette IDs are unchanged. `npm run build:rabbit` copies the original vector geometry from `src/rabbit/character.mjs`. Compatibility tests compare rendered SVG hashes with fixtures captured before the addition, including the saved portrait URL and all 16 previous head/character combinations.
