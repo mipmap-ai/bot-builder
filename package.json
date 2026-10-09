@@ -4,10 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs",
+    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs",
     "build:photo": "node scripts/build-photo.mjs",
     "build:rabbit": "node scripts/build-rabbit.mjs",
-    "build:formal": "node scripts/build-formal.mjs"
+    "build:formal": "node scripts/build-formal.mjs",
+    "build:randomize": "node scripts/build-randomize.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",
