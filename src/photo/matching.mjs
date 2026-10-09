@@ -10,7 +10,7 @@ export const HAIR_DESCRIPTIONS = {
 };
 export const OUTFIT_DESCRIPTIONS = {
  jacket:'a jacket over a shirt', turtleneck:'a turtleneck sweater', blouse:'a blouse', sailor:'a sailor shirt with a broad sailor collar',
- 'high-collar':'a shirt with a standing collar', wristband:'a plain T-shirt', hero:'a superhero costume with a cape'
+ 'high-collar':'a shirt with a standing collar', wristband:'a plain T-shirt', hero:'a superhero costume with a cape', tuxedo:'a tuxedo with formal lapels and a bow tie'
 };
 const ACCESSORIES = {
  none:'no glasses, sunglasses, hat or hair accessory', 'round-glasses':'round eyeglasses', 'square-glasses':'rectangular eyeglasses',
