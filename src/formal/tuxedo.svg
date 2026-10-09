@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1300">
+<path data-fill="skin" d="M414 330H586V500H414Z"/>
+<path data-fill="primary.base" d="M388 486Q315 502 280 585L230 800V1300H770V800L720 585Q685 502 612 486L570 460H430Z"/>
+<path data-fill="secondary.base" data-region="shirt" d="M430 450H570L605 510L500 785L395 510Z"/>
+<path data-fill="primary.shadow" d="M388 486L430 460L500 785L366 583L395 554L365 539Z"/>
+<path data-fill="primary.shadow" d="M612 486L570 460L500 785L634 583L605 554L635 539Z"/>
+<path data-fill="primary.highlight" d="M388 486L430 460L465 579L416 549L397 516Z"/>
+<path data-fill="primary.highlight" d="M612 486L570 460L535 579L584 549L603 516Z"/>
+<path data-fill="secondary.highlight" data-region="shirt" d="M430 450L500 476L462 533L416 478Z"/>
+<path data-fill="secondary.highlight" data-region="shirt" d="M570 450L500 476L538 533L584 478Z"/>
+<path data-fill="accent.base" d="M493 483L452 464Q446 487 452 510L493 495Z"/>
+<path data-fill="accent.base" d="M507 483L548 464Q554 487 548 510L507 495Z"/>
+<path data-fill="accent.highlight" d="M489 480H511V500H489Z"/>
+<path data-fill="accent.base" data-region="shirt" d="M495 554C495 547 505 547 505 554C505 561 495 561 495 554Z M495 599C495 592 505 592 505 599C505 606 495 606 495 599Z M495 644C495 637 505 637 505 644C505 651 495 651 495 644Z"/>
+<path data-fill="secondary.base" d="M596 631H639L634 641H601Z"/>
+</svg>

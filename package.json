@@ -6,7 +6,8 @@
     "dev": "node server.mjs",
     "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs",
     "build:photo": "node scripts/build-photo.mjs",
-    "build:rabbit": "node scripts/build-rabbit.mjs"
+    "build:rabbit": "node scripts/build-rabbit.mjs",
+    "build:formal": "node scripts/build-formal.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",

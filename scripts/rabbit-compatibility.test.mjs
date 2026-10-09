@@ -18,7 +18,14 @@ if(process.argv.includes('--record')){
  await writeFile(fixtureUrl,JSON.stringify(cases,null,2)+'\n');
 }else{
  const cases=JSON.parse(await readFile(fixtureUrl,'utf8'));
- for(const item of cases)test(`existing image remains identical: ${item.name}`,async()=>assert.equal(hash((await render(item.spec)).svg),item.hash));
+ for(const item of cases.filter(item=>!item.name.endsWith('/muni')))test(`existing image remains identical: ${item.name}`,async()=>assert.equal(hash((await render(item.spec)).svg),item.hash));
+ for(const item of cases.filter(item=>item.name.endsWith('/muni')))test(`Muni URL resolves to its requested Penguin replacement: ${item.name}`,async()=>{
+  const result=await render(item.spec);assert.match(result.svg,/#EDA73D/);assert.notEqual(hash(result.svg),item.hash);
+ });
+ test('tuxedo outfit resolves and renders with a shirt and bow tie',async()=>{
+  const spec=parseSpec({outfit:{type:'tuxedo'}});assert.equal(spec.outfit.type,'tuxedo');
+  const result=await render(spec);assert.match(result.svg,/#F1EFF5/);assert.match(result.svg,/#17181D/);
+ });
  test('rabbit is a distinct valid character and renders colored ears',async()=>{
   const spec=parseSpec({character:{type:'rabbit'}});assert.equal(spec.character.type,'rabbit');
   const rabbit=await render(spec);assert.match(rabbit.svg,/#E8A7B8/);assert.notEqual(hash(rabbit.svg),cases[0].hash);

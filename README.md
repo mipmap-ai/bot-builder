@@ -44,3 +44,9 @@ Local model assets use Google's pinned model version 1:
 Known limits: lighting correction is approximate, the part library has limited face and hair shapes, and tiny or covered eyes retain the current eye color.
 
 Rabbit is an additional character under Head. Its URL value is `character=rabbit`. Existing character IDs, defaults, and palette IDs are unchanged. `npm run build:rabbit` copies the original vector geometry from `src/rabbit/character.mjs`. Compatibility tests compare rendered SVG hashes with fixtures captured before the addition, including the saved portrait URL and all 16 previous head/character combinations.
+
+## Avatar link compatibility
+
+Keep existing avatar URLs valid and preserve their rendered images. Add new options without renaming existing IDs, changing defaults, or replacing existing artwork. Replace an existing option only when Brett explicitly requests it. The requested Muni-to-Penguin replacement retains `character=muni` so existing links still resolve. Tuxedo is an appended outfit with `outfit=tuxedo`.
+
+Run `npm run check` before publishing. Keep the saved avatar hash fixtures unchanged; test an explicitly requested replacement separately. Build the new artwork with `npm run build:formal` after editing `src/formal`.
