@@ -1,0 +1,1 @@
+var e=`/assets/mochi-earless-DUDE9squ.png`;export{e as default};

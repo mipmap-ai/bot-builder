@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>bot pfp</title>
+    <meta name="theme-color" content="#161618" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="bot pfp" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Build a cute bot and download it as your profile picture." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <script nonce="TcbT/USw69LND92huAXgSw==">globalThis.__zod_globalConfig = { jitless: true }</script>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="bot pfp" />
+    <meta property="og:title" content="bot pfp" />
+    <meta property="og:description" content="Build a cute bot and download it as your profile picture." />
+    <meta property="og:url" content="https://botpfp.com/" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" crossorigin src="/assets/index-RLaEwmsK.js" nonce="TcbT/USw69LND92huAXgSw=="></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-hePW80VL.js">
+    <link rel="modulepreload" crossorigin href="/assets/jsx-runtime-BNakU3Ej.js">
+    <link rel="modulepreload" crossorigin href="/assets/wavy-layers-CbRiHXgZ.js">
+    <link rel="modulepreload" crossorigin href="/assets/wavy-BqL-5g6J.js">
+    <link rel="modulepreload" crossorigin href="/assets/schemas-D34ymeJU.js">
+    <link rel="modulepreload" crossorigin href="/assets/spec-CRo6iK1T.js">
+    <link rel="modulepreload" crossorigin href="/assets/flat-kE0FO-mw.js">
+    <link rel="modulepreload" crossorigin href="/assets/spec-BwdhfE_6.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-Brw9IQjL.css">
+    <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/assets/first-frame-BEkDlSUK.webp">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
