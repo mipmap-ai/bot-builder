@@ -1,7 +1,9 @@
-import {FaceDetector,FilesetResolver} from '@mediapipe/tasks-vision';
+import {FaceDetector,FaceLandmarker,ImageSegmenter,FilesetResolver} from '@mediapipe/tasks-vision';
 import {photoStore,photoCatalog,parsePhotoLook} from '/assets/index-RLaEwmsK.js';
 import {makeGroups,closestColor,validateMatches,chooseHead,normalizeImageSize} from './matching.mjs';
+import {regionPixels,representativeColor,illuminationGains,correctColor,categoryBounds,faceDimensions,hairGeometry,irisColor} from './regions.mjs';
 let detectorPromise;
+let analysisPromise;
 let worker;
 let operation=0;
 let selected;
@@ -54,19 +56,6 @@ function crop(source,x,y,width,height){
  const context=canvas.getContext('2d',{willReadFrequently:true});context.drawImage(source,x,y,width,height,0,0,canvas.width,canvas.height);
  const pixels=context.getImageData(0,0,canvas.width,canvas.height);return {canvas,data:pixels.data,width:canvas.width,height:canvas.height};
 }
-function sampleColor(source,regions,isSkin=false){
- const samples=[];
- for(const region of regions){
-  const part=crop(source,...region);const data=part.data;
-  for(let i=0;i<data.length;i+=16){const r=data[i],g=data[i+1],b=data[i+2];if(data[i+3]<240)continue;
-   if(isSkin&&(r<g*.9||r<b*.96||Math.max(r,g,b)-Math.min(r,g,b)<5))continue;
-   samples.push([r,g,b]);
-  }
- }
- if(!samples.length)return null;
- const median=channel=>{const values=samples.map(rgb=>rgb[channel]).sort((a,b)=>a-b);return values[Math.floor(values.length/2)];};
- return [median(0),median(1),median(2)];
-}
 async function detect(source){
  detectorPromise??=(async()=>{
   const files=await FilesetResolver.forVisionTasks('/photo/vision');
@@ -74,8 +63,39 @@ async function detect(source){
  })();
  try{return (await detectorPromise).detect(source);}catch(error){detectorPromise=null;throw error;}
 }
+async function analyze(source){
+ analysisPromise??=(async()=>{
+  const files=await FilesetResolver.forVisionTasks('/photo/vision');
+  const segmenter=await ImageSegmenter.createFromOptions(files,{baseOptions:{modelAssetPath:'/photo/selfie-multiclass.tflite',delegate:'CPU'},runningMode:'IMAGE',outputCategoryMask:true,outputConfidenceMasks:false});
+  const landmarker=await FaceLandmarker.createFromOptions(files,{baseOptions:{modelAssetPath:'/photo/face-landmarker.task',delegate:'CPU'},runningMode:'IMAGE',numFaces:2});
+  return {segmenter,landmarker};
+ })();
+ try{
+  const {segmenter,landmarker}=await analysisPromise;
+  const faces=landmarker.detect(source).faceLandmarks;
+  const result=segmenter.segment(source);
+  try{
+   const mask=result.categoryMask.getAsUint8Array().slice();
+   const width=result.categoryMask.width,height=result.categoryMask.height;
+   const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;
+   const context=canvas.getContext('2d',{willReadFrequently:true});context.drawImage(source,0,0,width,height);
+   const pixels=context.getImageData(0,0,width,height).data;
+   return {mask,width,height,pixels,faces};
+  }finally{result.close();}
+ }catch(error){analysisPromise=null;throw error;}
+}
+function isolated(source,analysis,categories){
+ const canvas=document.createElement('canvas');canvas.width=source.width;canvas.height=source.height;
+ const context=canvas.getContext('2d',{willReadFrequently:true});context.drawImage(source,0,0);
+ const data=context.getImageData(0,0,canvas.width,canvas.height);
+ for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){
+  const category=analysis.mask[Math.floor(y/canvas.height*analysis.height)*analysis.width+Math.floor(x/canvas.width*analysis.width)];
+  if(!categories.includes(category)){const index=(y*canvas.width+x)*4;data.data[index]=data.data[index+1]=data.data[index+2]=127;}
+ }
+ context.putImageData(data,0,0);return canvas;
+}
 async function match(crops,groups,token){
- worker??=new Worker('/photo/worker.js',{type:'module'});
+ worker??=new Worker('/photo/worker.js?v=2',{type:'module'});
  return new Promise((resolve,reject)=>{
   const timeout=setTimeout(()=>{cancelMatch=null;worker?.terminate();worker=null;reject(Error('Matching took too long. Check your connection and try again.'));},300000);
   cancelMatch=()=>{clearTimeout(timeout);reject(new DOMException('Matching cancelled.','AbortError'));};
@@ -100,21 +120,39 @@ create.onclick=async()=>{
   if(detection.detections.length>1)throw Error('More than one face found. Crop the photo to the person you want to match.');
   const box=detection.detections[0].boundingBox;
   const {originX:x,originY:y,width:w,height:h}=box;
-  const skin=sampleColor(source,[[x+w*.16,y+h*.53,w*.16,h*.14],[x+w*.67,y+h*.53,w*.16,h*.14],[x+w*.4,y+h*.2,w*.2,h*.13]],true);
-  const sampledHair=sampleColor(source,[[x+w*.22,y-h*.28,w*.55,h*.19]]);
-  const outfitVisible=source.height>y+h*1.5;
-  const outfitColor=outfitVisible?sampleColor(source,[[x+w*.15,y+h*1.3,w*.7,Math.min(h*.45,source.height-y-h*1.3)]]):null;
-  const portrait=crop(source,x-w*.25,y-h*.45,w*1.5,h*1.55);
-  const hair=crop(source,x-w*.25,y-h*.45,w*1.5,h*1.4);
-  const face=crop(source,x-w*.1,y-h*.05,w*1.2,h*1.15);
+  status.textContent='Separating hair, skin and clothing…';
+  const analysis=await analyze(source);if(token!==operation)return;
+  const skinSamples=regionPixels(analysis.pixels,analysis.mask,3);
+  const hairSamples=regionPixels(analysis.pixels,analysis.mask,1);
+  const clothingSamples=regionPixels(analysis.pixels,analysis.mask,4);
+  const gains=illuminationGains(clothingSamples);
+  const skin=correctColor(representativeColor(skinSamples,.9),gains);
+  const sampledHair=representativeColor(hairSamples,.3);
+  const outfitColor=correctColor(representativeColor(clothingSamples,.6),gains);
+  const outfitVisible=clothingSamples.length>150;
+  const hairBounds=categoryBounds(analysis.mask,analysis.width,analysis.height,[1,3]);
+  const outfitBounds=categoryBounds(analysis.mask,analysis.width,analysis.height,[4]);
+  const person=isolated(source,analysis,[1,2,3,4,5]);
+  const headSource=isolated(source,analysis,[1,3,5]);
+  const clothingSource=isolated(source,analysis,[4]);
+  const bounded=(canvas,bounds,fallback)=>bounds?crop(canvas,bounds.x*source.width-w*.12,bounds.y*source.height-h*.12,bounds.width*source.width+w*.24,bounds.height*source.height+h*.24):fallback;
+  const portrait=bounded(headSource,hairBounds,crop(person,x-w*.35,y-h*.7,w*1.7,h*2));
+  const hair=portrait;
+  const hairContext=bounded(source,hairBounds,crop(source,x-w*.4,y-h*.8,w*1.8,h*2.4));
+  const face=crop(headSource,x-w*.1,y-h*.05,w*1.2,h*1.15);
   const eyes=crop(source,x+w*.05,y+h*.22,w*.9,h*.3);
-  const outfit=crop(source,x-w*.5,y+h*.95,w*2,Math.min(h*1.6,source.height-y-h*.95));
+  const outfit=bounded(clothingSource,outfitBounds,crop(person,x-w*.8,y+h*.6,w*2.6,h*1.4));
+  const outfitContext=bounded(source,outfitBounds,outfit);
+  const geometry=hairGeometry(analysis,analysis.faces[0]);
+  const eyeSample=irisColor(source.getContext("2d").getImageData(0,0,source.width,source.height).data,source.width,source.height,analysis.faces[0]);
   const serialize=part=>({data:part.data,width:part.width,height:part.height});
-  const predicted=await match({portrait:serialize(portrait),hair:serialize(hair),face:serialize(face),outfit:serialize(outfit),eyes:serialize(eyes)},makeGroups(photoCatalog,outfitVisible,w>=180).filter(group=>!sampledHair||group.key!=='hairColor'),token);
+  const predicted=await match({portrait:serialize(portrait),hair:[serialize(hairContext),serialize(hair)],face:serialize(face),outfit:[serialize(outfitContext),serialize(outfit)],eyes:serialize(eyes)},makeGroups(photoCatalog,outfitVisible,!eyeSample&&w>=180,geometry).filter(group=>!sampledHair||group.key!=='hairColor'),token);
+  if(eyeSample)predicted.eyeColor=closestColor(eyeSample,photoCatalog.eyeColor.entries);
+  if(geometry.long&&predicted.hair==='messy-bun')predicted.hair='ponytail';
   if(sampledHair)predicted.hairColor=closestColor(sampledHair,photoCatalog.hairColor.entries);
   const matches=validateMatches(predicted,photoCatalog);
   if(token!==operation)return;
-  const look={...photoStore.getState().look,...matches,head:chooseHead(box),character:'bot',blush:'skin',held:'none'};
+  const look={...photoStore.getState().look,...matches,head:analysis.faces[0]?chooseHead(faceDimensions(analysis.faces[0],source.width,source.height)):"classic",character:'bot',blush:'skin',held:'none'};
   if(skin)look.skin=closestColor(skin,photoCatalog.skin.entries);
   if(outfitColor)look.outfitColor=closestColor(outfitColor,photoCatalog.outfitColor.entries);
   photoStore.getState().load(parsePhotoLook(look));

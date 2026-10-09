@@ -22,14 +22,23 @@ The private authoring studio and the original site's private backend are not rep
 
 ## Validation
 
-Desktop and 390px mobile layout checked. All six editor tabs checked. Head selection and undo/redo checked. Downloaded PNGs verified at 1024×1024 and 2048×2048; SVG downloaded and inspected. Photobooth and share-link controls checked. Module references and feedback validation, persistence, and failure handling pass.
+Desktop and 390px mobile layout checked. All seven editor tabs checked. Head selection and undo/redo checked. Downloaded PNGs verified at 1024×1024 and 2048×2048; SVG downloaded and inspected. Photobooth and share-link controls checked. Module references and feedback validation, persistence, and failure handling pass.
 
 ## Photo matching and eye colors
 
 Choose Photo match, select a JPG/PNG/WebP portrait of one person, and choose Create bot. The face detector and CLIP matcher run entirely on the visitor's device. The first match downloads a pinned quantized model from Hugging Face; subsequent matches use the browser cache. No photo or photo crop is uploaded to this site's backend, stored in R2, or sent to an AI service. Closing the dialog cancels processing and clears the selected photo. No API key is required.
 
-The matcher uses the existing catalog only. Face proportions select a head shape; sampled cheek and hair colors select palette swatches. Cropped visual classification selects hair, outfit, and visible accessories. Uncertain accessories are omitted. Small or obscured eyes retain the existing eye color. Model predictions are approximate and can differ from the person; manual adjustments remain available. The whole match is one undoable edit.
+The matcher uses the existing catalog only. Face proportions select a head shape; segmented skin and hair colors select palette swatches. Visual classification selects hair, outfit, and visible accessories. Uncertain accessories are omitted. Small or obscured eyes retain the existing eye color. Model predictions are approximate and can differ from the person; manual adjustments remain available. The whole match is one undoable edit.
 
 The Eyes tab provides Black, Dark brown, Brown, Hazel, Green, Blue, Gray, Amber, and Violet. Black remains the default. Eye color is part of URL state, undo/redo, thumbnails, photobooth, PNG and SVG exports.
 
 Photo source files are in `src/photo/`. `scripts/build-photo.mjs` produces the committed browser bundles and copies the WASM runtimes from the exact npm lockfile dependencies. MediaPipe's pinned BlazeFace model is included locally. CLIP model revision is pinned in `src/photo/worker.mjs`.
+
+Photo matching separates hair, face skin, and clothes with MediaPipe SelfieMulticlass before sampling colors. Bright skin samples reduce shadow bias; neutral clothing provides a bounded warm-light correction. FaceLandmarker measures head proportions and iris colors. Hair candidates use visible forehead and hair length; CLIP compares the original and isolated crops. Photos and masks remain on the device. No photo data is included in source or deployment.
+
+Local model assets use Google's pinned model version 1:
+
+- https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/1/selfie_multiclass_256x256.tflite
+- https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
+
+Known limits: lighting correction is approximate, the part library has limited face and hair shapes, and tiny or covered eyes retain the current eye color.

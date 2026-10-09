@@ -22,8 +22,8 @@ const ACCESSORIES = {
 const BEARDS={none:'a clean-shaven face without a beard or mustache', 'full-beard':'a full beard', 'curly-mustache':'a mustache without a beard'};
 const EYE_COLORS={black:'very dark brown', 'dark-brown':'dark brown',brown:'brown',hazel:'hazel',green:'green',blue:'blue',gray:'gray',amber:'amber',violet:'violet'};
 const HAIR_COLORS={chestnut:'brown',espresso:'dark brown',auburn:'reddish brown',copper:'copper red',honey:'golden brown',platinum:'platinum blonde',silver:'gray',rose:'pink',midnight:'black',slate:'bluish gray','soft-black':'soft black',sakura:'light pink',teal:'blue or teal',butter:'golden blonde',ice:'pale blue'};
-export function makeGroups(catalog, outfitVisible, eyesVisible=false) {
- const group=(key,region,description)=>({key,region,choices:catalog[key].entries.map(e=>({id:e.id,label:e.label,text:description(e)}))});
+export function makeGroups(catalog, outfitVisible, eyesVisible=false,geometry={}) {
+ const group=(key,region,description)=>({key,region,choices:catalog[key].entries.filter(e=>key!=='hair'||hairCandidate(e.id,geometry)).map(e=>({id:e.id,label:e.label,text:description(e)}))});
  return [
   group('hair','hair',e=>`A portrait of a person with ${HAIR_DESCRIPTIONS[e.id]||e.label.toLowerCase()}.`),
   group('hairColor','hair',e=>`A portrait of a person with ${HAIR_COLORS[e.id]||e.label.toLowerCase()} hair.`),
@@ -62,4 +62,10 @@ export function selectPrediction(key,predictions,choices){
  if(key==='accessory'&&best.id!=='none'&&(predictions[0].score<.24||predictions[0].score-(predictions[1]?.score||0)<.08))return 'none';
  if(key==='beard'&&best.id!=='none'&&(predictions[0].score<.55||predictions[0].score-(predictions[1]?.score||0)<.15))return 'none';
  return best.id;
+}
+
+export function hairCandidate(id,{long=false,foreheadVisible=false}={}){
+ if(foreheadVisible&&['straight','sakura','long-fringe'].includes(id))return false;
+ if(long&&!['ponytail','messy-bun','straight','twin-tails','long-waves','big-waves'].includes(id))return false;
+ return true;
 }

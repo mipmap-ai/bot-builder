@@ -18,8 +18,16 @@ self.onmessage=async({data})=>{
   for(let i=0;i<data.groups.length;i++){
    const group=data.groups[i],crop=data.crops[group.region];
    postMessage({type:'progress',message:`Matching ${group.key==='hairColor'?'hair color':group.key} · ${i+1} of ${data.groups.length}`});
-   const image=new RawImage(new Uint8ClampedArray(crop.data),crop.width,crop.height,4);
-   const predictions=await classifier(image,group.choices.map(e=>e.text),{hypothesis_template:'{}'});
+   const variants=Array.isArray(crop)?crop:[crop];
+   const scores=new Map();
+   for(let variant=0;variant<variants.length;variant++){
+    const part=variants[variant];
+    const image=new RawImage(new Uint8ClampedArray(part.data),part.width,part.height,4);
+    const result=await classifier(image,group.choices.map(e=>e.text),{hypothesis_template:'{}'});
+    const weight=variants.length===1?1:variant===0?.8:.2;
+    for(const prediction of result)scores.set(prediction.label,(scores.get(prediction.label)||0)+prediction.score*weight);
+   }
+   const predictions=[...scores].map(([label,score])=>({label,score})).sort((a,b)=>b.score-a.score);
    matches[group.key]=selectPrediction(group.key,predictions,group.choices);
   }
   postMessage({type:'result',matches});
