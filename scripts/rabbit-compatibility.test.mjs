@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile,writeFile} from 'node:fs/promises';
+import {r as framePresets} from '../dist/client/assets/wavy-BqL-5g6J.js';
 import {r as parseSpec} from '../dist/client/assets/spec-BwdhfE_6.js';
 const pending=new Map();
 globalThis.self={postMessage:message=>{const callback=pending.get(message.id);if(callback){pending.delete(message.id);message.error?callback.reject(Error(message.error)):callback.resolve(message);}}};
@@ -25,6 +26,17 @@ if(process.argv.includes('--record')){
  test('tuxedo outfit resolves and renders with a shirt and bow tie',async()=>{
   const spec=parseSpec({outfit:{type:'tuxedo'}});assert.equal(spec.outfit.type,'tuxedo');
   const result=await render(spec);assert.match(result.svg,/#F1EFF5/);assert.match(result.svg,/#17181D/);
+ });
+ test('centered frame places the head origin at the horizontal and vertical center with no rotation',()=>{
+  const frame=framePresets['front-center'];
+  assert.deepEqual(frame.view.center,[0,0]);assert.deepEqual(frame.pose,{yaw:0,pitch:0,roll:0});
+ });
+ test('centered frame resolves for Bot, Penguin and Rabbit',async()=>{
+  for(const type of ['bot','muni','rabbit']){
+   const spec=parseSpec({frame:{preset:'front-center'},character:{type},outfit:{type:'tuxedo'}});
+   assert.equal(spec.frame.preset,'front-center');
+   const result=await render(spec);assert.match(result.svg,/#F1EFF5/);assert.notEqual(hash(result.svg),cases[0].hash);
+  }
  });
  test('rabbit is a distinct valid character and renders colored ears',async()=>{
   const spec=parseSpec({character:{type:'rabbit'}});assert.equal(spec.character.type,'rabbit');
