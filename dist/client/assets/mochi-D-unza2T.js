@@ -1,0 +1,1 @@
+var e=`/assets/mochi-BodfWGuG.png`;export{e as default};

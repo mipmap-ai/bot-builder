@@ -1,0 +1,1 @@
+var e=`/assets/classic-earless-T7ozd6bf.png`;export{e as default};

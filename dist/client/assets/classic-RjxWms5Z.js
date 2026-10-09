@@ -1,0 +1,1 @@
+var e=`/assets/classic-Db_8ijDZ.png`;export{e as default};
