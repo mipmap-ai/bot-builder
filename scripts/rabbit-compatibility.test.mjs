@@ -43,3 +43,13 @@ if(process.argv.includes('--record')){
   const rabbit=await render(spec);assert.match(rabbit.svg,/#E8A7B8/);assert.notEqual(hash(rabbit.svg),cases[0].hash);
  });
 }
+
+test('legacy Sweet Potato specifications render exactly as Nothing held',async()=>{
+ for(const type of ['bot','muni','rabbit']){
+  const avatar={character:{type},frame:{preset:'front-center'},hair:{type:'ponytail'},outfit:{type:'tuxedo'},accessory:{crown:'trucker-hat',held:'sweet-potato'}};
+  const parsed=parseSpec(avatar);assert.equal(parsed.accessory.held,'none');assert.equal(parsed.accessory.crown,'trucker-hat');
+  const expected={...avatar,accessory:{...avatar.accessory,held:'none'}};
+  assert.deepEqual(parsed,parseSpec(expected));
+  assert.equal((await render(avatar)).svg,(await render(expected)).svg);
+ }
+});

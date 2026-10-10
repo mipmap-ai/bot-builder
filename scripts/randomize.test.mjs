@@ -50,3 +50,14 @@ test('the current avatar is untouched until a new valid result is selected',()=>
  assert.deepEqual(previous,before);
  assert.notDeepEqual(result,previous);
 });
+
+test('retired Sweet Potato links resolve to Nothing held without changing other selections',()=>{
+ const oldLook={...defaults,held:'sweet-potato',hair:'ponytail',outfit:'tuxedo',frame:'front-center',skin:'honey',hairColor:'espresso'};
+ const before={...oldLook};
+ const migrated=app.parseLook(oldLook);
+ assert.deepEqual(migrated,{...oldLook,held:'none'});
+ assert.deepEqual(oldLook,before);
+ assert.equal(app.toSpec(migrated).accessory.held,'none');
+ assert.deepEqual(app.catalog.held.entries.map(entry=>entry.id),['none']);
+ assert.throws(()=>app.parseLook({...defaults,held:'invented-item'}));
+});
