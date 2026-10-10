@@ -50,3 +50,5 @@ Rabbit is an additional character under Head. Its URL value is `character=rabbit
 Keep existing avatar URLs valid and preserve their rendered images. Add new options without renaming existing IDs, changing defaults, or replacing existing artwork. Replace an existing option only when Brett explicitly requests it. The requested Muni-to-Penguin replacement retains `character=muni` so existing links still resolve. Tuxedo is an appended outfit with `outfit=tuxedo`.
 
 Run `npm run check` before publishing. Keep the saved avatar hash fixtures unchanged; test an explicitly requested replacement separately. Build the new artwork with `npm run build:formal` after editing `src/formal`.
+
+Sweet Potato is retired. Legacy `held=sweet-potato` links and `accessory.held` specs map to Nothing held, preserving every other selection. Keep this migration when changing catalogs or parsers.
