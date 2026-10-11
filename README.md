@@ -14,7 +14,7 @@ Open http://127.0.0.1:5173. Run `npm run check` for module integrity and backend
 
 ## Included
 
-Original public artwork, styling, avatar controls, looks, photobooth, undo/redo, randomized avatars, URL state, PNG clipboard support, 1024px/2048px PNG exports, and SVG exports. The footer credit reads "made with love by Matt · Modified by Brett", with Matt linked to the original credit at https://x.com/mattyp and Brett linked to https://x.com/bretthamlin.
+Original public artwork, styling, avatar controls, looks, photobooth, undo/redo, randomized avatars, URL state, PNG clipboard support, 1024px/2048px PNG exports, and SVG exports. The footer credit reads "original by Matt · remixed by Brett", with Matt linked to the original credit at https://x.com/mattyp and Brett linked to https://x.com/bretthamlin.
 
 Text feedback saves to this copy's own R2 bucket when hosted, or owner-only JSON files in `.local-data/feedback` locally. It does not send to the original creator. Voice input uses browser speech recognition where supported instead of the original site's private transcription service. Speech recognition can use the browser vendor's service. Microphone permission is requested only after the visitor chooses Record. Analytics collection is disabled.
 
