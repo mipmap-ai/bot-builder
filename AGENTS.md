@@ -6,7 +6,7 @@
 - Repository: https://github.com/mipmap-ai/bot-builder. Worker name: `botbuilder`.
 - `wrangler.json` is the deployment configuration. Serve `dist/client` through the `ASSETS` binding and route `/api/*` to `dist/server/index.js`.
 - Feedback uses the private R2 bucket `botbuilder-feedback` through `BUCKET`. Keep the bucket private. Photo matching runs on the visitor's device.
-- The old Sites deployment is retained for existing links. Cloudflare is the production deployment target; do not publish routine changes through Sites.
+- The old Sites URL redirects to Cloudflare and preserves paths, query strings, and avatar links. Its redirect source is in `legacy-site/index.js`. Cloudflare is the production deployment target; do not publish the editor through Sites.
 
 ## Local setup and checks
 
@@ -43,7 +43,7 @@ Preserve the credit `original by Matt · remixed by Brett`, linking Matt to http
 
 ## Publishing through Cloudflare Workers Builds
 
-Configure the Git integration in Cloudflare, not in GitHub Actions. Current status: automatic deployment is not enabled; the `mipmap-ai` GitHub connection still needs owner approval. In the Cloudflare dashboard, open Workers & Pages > botbuilder > Settings > Builds. Use:
+Automatic deployment is enabled through Cloudflare Workers Builds. The Git integration is configured in Cloudflare, not in GitHub Actions. In the Cloudflare dashboard, open Workers & Pages > botbuilder > Settings > Builds. Use:
 
 - Git repository: `mipmap-ai/bot-builder`
 - Production branch: `main`
