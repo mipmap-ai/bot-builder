@@ -1,4 +1,4 @@
-# BotPFP copy
+# Bot Builder
 
 A self-contained copy of the public editor at https://botpfp.com, captured on 2026-10-08.
 
@@ -62,3 +62,5 @@ The original BotPFP editor and artwork are credited to Matt (https://x.com/matty
 Production runs at https://botbuilder.mipmap.ai in the MipMap Cloudflare account. `wrangler.json` deploys the committed editor assets and feedback Worker. Feedback uses the private `botbuilder-feedback` R2 bucket. Photos remain on-device. Existing avatar query strings work unchanged on the new domain.
 
 Run `npm ci`, `npm run check`, and `npm run deploy` with an authorized Cloudflare connection. Keep API credentials outside the repository. No rebuild is needed unless source modules are edited.
+
+The intended Cloudflare Workers Builds setup deploys merged changes from `main`, after running `npm run check`. Automatic deployment is not enabled yet; connecting the `mipmap-ai` GitHub organization requires owner approval. The Git connection and build commands are configured in the Cloudflare dashboard, not in GitHub Actions. See [AGENTS.md](AGENTS.md) for local setup, source builds, compatibility rules, deployment, rollback, and credential handling.
