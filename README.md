@@ -56,3 +56,9 @@ Sweet Potato is retired. Legacy `held=sweet-potato` links and `accessory.held` s
 ## Original authorship and licensing
 
 The original BotPFP editor and artwork are credited to Matt (https://x.com/mattyp). Brett modified this copy. No license granting redistribution of the original editor or artwork has been identified. Attribution does not grant redistribution rights. This repository does not claim an open-source license for the original material. Dependency licenses do not license the original application or artwork.
+
+## Cloudflare hosting
+
+Production runs at https://botbuilder.mipmap.ai in the MipMap Cloudflare account. `wrangler.json` deploys the committed editor assets and feedback Worker. Feedback uses the private `botbuilder-feedback` R2 bucket. Photos remain on-device. Existing avatar query strings work unchanged on the new domain.
+
+Run `npm ci`, `npm run check`, and `npm run deploy` with an authorized Cloudflare connection. Keep API credentials outside the repository. No rebuild is needed unless source modules are edited.
