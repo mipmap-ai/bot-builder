@@ -14,7 +14,7 @@ Open http://127.0.0.1:5173. Run `npm run check` for module integrity and backend
 
 ## Included
 
-Original public artwork, styling, avatar controls, looks, photobooth, undo/redo, randomized avatars, URL state, PNG clipboard support, 1024px/2048px PNG exports, and SVG exports. The footer credit reads "made with love by Brett".
+Original public artwork, styling, avatar controls, looks, photobooth, undo/redo, randomized avatars, URL state, PNG clipboard support, 1024px/2048px PNG exports, and SVG exports. The footer credit reads "original by Matt · remixed by Brett", with Matt linked to the original credit at https://x.com/mattyp and Brett linked to https://x.com/bretthamlin.
 
 Text feedback saves to this copy's own R2 bucket when hosted, or owner-only JSON files in `.local-data/feedback` locally. It does not send to the original creator. Voice input uses browser speech recognition where supported instead of the original site's private transcription service. Speech recognition can use the browser vendor's service. Microphone permission is requested only after the visitor chooses Record. Analytics collection is disabled.
 
@@ -52,3 +52,7 @@ Keep existing avatar URLs valid and preserve their rendered images. Add new opti
 Run `npm run check` before publishing. Keep the saved avatar hash fixtures unchanged; test an explicitly requested replacement separately. Build the new artwork with `npm run build:formal` after editing `src/formal`.
 
 Sweet Potato is retired. Legacy `held=sweet-potato` links and `accessory.held` specs map to Nothing held, preserving every other selection. Keep this migration when changing catalogs or parsers.
+
+## Original authorship and licensing
+
+The original BotPFP editor and artwork are credited to Matt (https://x.com/mattyp). Brett modified this copy. No license granting redistribution of the original editor or artwork has been identified. Attribution does not grant redistribution rights. This repository does not claim an open-source license for the original material. Dependency licenses do not license the original application or artwork.
