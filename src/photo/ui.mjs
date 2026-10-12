@@ -44,13 +44,27 @@ dialog.querySelector('.photo-match-close').onclick=close;
 dialog.addEventListener('close',reset);
 dialog.addEventListener('click',event=>{if(event.target===dialog)close();});
 dialog.querySelector('.photo-match-change').onclick=()=>input.click();
-input.addEventListener('change',()=>{
+input.addEventListener('change',async()=>{
+ const selectionToken=++operation;
  error.hidden=true;status.textContent='';matchOutcome='idle';matchError=null;const file=input.files?.[0];selected=null;create.disabled=true;
  if(!file)return;
  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){showError('Choose a JPG, PNG or WebP photo.');return;}
  if(file.size>12*1024*1024){showError('That photo is too large. Choose one smaller than 12 MB.');return;}
- if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(file);image.src=previewUrl;selected=file;preview.hidden=false;upload.hidden=true;create.disabled=false;
+ let bitmap;
+ try {
+  bitmap=await createImageBitmap(file);
+  if(selectionToken!==operation)return;
+  const size=normalizeImageSize(bitmap.width,bitmap.height);
+  const canvas=document.createElement('canvas');canvas.width=size.width;canvas.height=size.height;
+  canvas.getContext('2d').drawImage(bitmap,0,0,size.width,size.height);
+  const raster=await new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Could not preview that photo.')),'image/png'));
+  if(selectionToken!==operation)return;
+  if(previewUrl)URL.revokeObjectURL(previewUrl);
+  previewUrl=URL.createObjectURL(raster);image.src=previewUrl;selected=file;preview.hidden=false;upload.hidden=true;create.disabled=false;
+ }catch(failure){if(selectionToken===operation)showError('Could not read that image. Choose a JPG, PNG or WebP photo.');}
+ finally{bitmap?.close();}
 });
+
 function crop(source,x,y,width,height){
  x=Math.max(0,Math.min(source.width-1,x));y=Math.max(0,Math.min(source.height-1,y));
  width=Math.max(1,Math.min(source.width-x,width));height=Math.max(1,Math.min(source.height-y,height));
