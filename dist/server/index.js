@@ -19,6 +19,9 @@ export async function handleApi(request, storage) {
 }
 export default {
   async fetch(request, env) {
+    const path = new URL(request.url).pathname;
+    if (path === '/mcp') return (await import('./mcp.js')).handleMcp(request);
+    if (path === '/api/bot.svg' || path === '/api/bot.png') return (await import('./mcp.js')).handleImage(request);
     const result = await handleApi(request, env.BUCKET);
     if (result) return result;
     const response = await env.ASSETS.fetch(request);

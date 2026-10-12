@@ -6,3 +6,8 @@ node_modules/
 .dev.vars
 .env
 .env.*
+
+# MCP Worker outputs are rebuilt from shared editor sources.
+dist/server/generated/
+dist/server/mcp.js
+dist/server/resvg.wasm
