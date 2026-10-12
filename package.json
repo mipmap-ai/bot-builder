@@ -4,12 +4,13 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs",
+    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs && node --test scripts/webmcp.test.mjs",
     "build:photo": "node scripts/build-photo.mjs",
     "build:rabbit": "node scripts/build-rabbit.mjs",
     "build:formal": "node scripts/build-formal.mjs",
     "build:randomize": "node scripts/build-randomize.mjs",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "build:webmcp": "node scripts/build-webmcp.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",
