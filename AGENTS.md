@@ -4,7 +4,7 @@
 
 - This app is designed for Cloudflare Workers and is deployed at https://botbuilder.mipmap.ai.
 - Repository: https://github.com/mipmap-ai/bot-builder. Worker name: `botbuilder`.
-- `wrangler.json` is the deployment configuration. Serve `dist/client` through the `ASSETS` binding and route `/api/*` to `dist/server/index.js`.
+- `wrangler.json` is the deployment configuration. Serve `dist/client` through the `ASSETS` binding and route `/mcp` and `/api/*` to `dist/server/index.js`.
 - Feedback uses the private R2 bucket `botbuilder-feedback` through `BUCKET`. Keep the bucket private. Photo matching runs on the visitor's device.
 - The old Sites URL redirects to Cloudflare and preserves paths, query strings, and avatar links. Its redirect source is in `legacy-site/index.js`. Cloudflare is the production deployment target; do not publish the editor through Sites.
 
@@ -37,6 +37,7 @@ Feature source modules have explicit build commands. After editing one, rebuild 
 - `src/formal`: `npm run build:formal`
 - `src/randomize`: `npm run build:randomize`
 - `src/webmcp`: `npm run build:webmcp`
+- `src/mcp`: `npm run build:mcp` (also run automatically by check and deploy)
 
 WebMCP registers through `document.modelContext` only in supported browsers. Its tools use the existing editor state and catalog. Preserve the named bridge exports in the captured editor bundle. After photo UI changes, rebuild the UI bundle with the esbuild command in `scripts/build-photo.mjs` (the full photo build also copies the model runtimes). Verify registration and actual tool calls in the in-app browser before deployment. Photo matching starts asynchronously; poll `get_photo_match_status` and read the current bot when complete. Tools must never accept arbitrary photo URLs or local file paths.
 
@@ -74,3 +75,9 @@ npm run deploy
 Verify the target Cloudflare account before deployment. Keep credentials in the authorized secret store or process environment, never in source, shell arguments, logs, or chat. Cloudflare's build credential stays in Cloudflare. Do not create a duplicate Worker, R2 bucket, or DNS record. Do not commit `.env`, `.dev.vars`, `.wrangler`, local feedback, or personal photos.
 
 For per-ticket worktrees on Brett's machine, use `~/.codex/bin/agent-worktree <issue-key>` and wait for setup to finish. Never copy or symlink `node_modules` between checkouts.
+
+## Hosted MCP maintenance
+
+The public Streamable HTTP endpoint is `https://botbuilder.mipmap.ai/mcp`. Keep this route in `assets.run_worker_first`. The stateless server uses the same catalog, serializer, migrations, and SVG geometry as the editor. Its generated modules and static resvg WASM live under `dist/server` and are ignored by Git; the Cloudflare build recreates them. Never expose feedback storage or secrets through MCP. Photo matching stays on-device.
+
+Before publishing MCP changes, run `npm run check`, start `npx wrangler dev --port 8787`, then run `npm run verify:mcp`. Check `npx wrangler deploy --dry-run` for upload limits. After the merged commit deploys, run `npm run verify:mcp -- https://botbuilder.mipmap.ai`. Verify the Cloudflare build corresponds to that merge commit. Wait for both GitHub CodeQL checks to pass before merging.

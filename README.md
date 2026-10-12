@@ -74,3 +74,44 @@ Supported browser agents can discover valid options, read or change the current 
 Photo tools open the existing dialog and can start matching a photo already selected by the visitor. `match_selected_photo` returns immediately; poll `get_photo_match_status` for `complete`, `failed`, or `cancelled`, then read the bot. Photos stay on-device and are never included in tool results. These tools cannot select files or fetch photos from a URL.
 
 Rebuild the tool modules with `npm run build:webmcp`. Run `npm run check` and verify actual calls through the browser's WebMCP interface before merging.
+
+## Hosted MCP server
+
+Connect an MCP client to **https://botbuilder.mipmap.ai/mcp** using Streamable HTTP. No login or API key is required. A client that supports remote MCP can add this URL as a server; use its normal MCP server settings.
+
+The six tools are `get_bot_options`, `create_bot`, `edit_bot`, `randomize_bot`, `get_bot_share_link`, and `export_bot`. First list options, then pass stable IDs in `selections`. Creation returns full selections, unavailable fields, and a share URL. Editing takes that URL plus new selections. Export returns a public PNG or SVG download URL, at 1024 or 2048 pixels. Old share URLs retain the editor's existing migrations.
+
+For example, call `create_bot` with:
+
+```json
+{
+  "selections": {
+    "character": "rabbit",
+    "eyeColor": "blue",
+    "outfit": "tuxedo",
+    "frame": "front-center"
+  }
+}
+```
+
+This server is stateless. It does not read or change an open browser, provide undo history, access private feedback, or accept photos, file paths, or remote photo URLs. Photo matching and editor undo/redo remain available through the site's WebMCP tools and normal controls. Nothing is saved by MCP; clients retain their own bot links.
+
+`npm run build:mcp` extracts the catalog, URL logic, and SVG renderer from the captured editor by following resolved module bindings. It bundles the official MCP SDK and a static resvg WASM module for Cloudflare. Generated Worker modules are ignored by Git and rebuilt by `npm run check` and `npm run deploy`. Keep artwork fixtures unchanged.
+
+For a real local Worker and protocol check:
+
+```sh
+npm ci
+npm run check
+npx wrangler dev --port 8787
+# In another terminal:
+npm run verify:mcp
+```
+
+After a successful Cloudflare build, verify the deployed endpoint:
+
+```sh
+npm run verify:mcp -- https://botbuilder.mipmap.ai
+```
+
+This uses an actual MCP client and checks every tool, legacy links, both export formats and sizes, rejected inputs, origin protection, and existing site routes. The SVG/PNG API accepts only catalog selections and bounded sizes. It never renders caller-supplied SVG.

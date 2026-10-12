@@ -4,18 +4,27 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs && node --test scripts/webmcp.test.mjs",
+    "check": "npm run build:mcp && node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs && node --test scripts/webmcp.test.mjs && node --test scripts/mcp.test.mjs",
     "build:photo": "node scripts/build-photo.mjs",
     "build:rabbit": "node scripts/build-rabbit.mjs",
     "build:formal": "node scripts/build-formal.mjs",
     "build:randomize": "node scripts/build-randomize.mjs",
-    "deploy": "wrangler deploy",
-    "build:webmcp": "node scripts/build-webmcp.mjs"
+    "deploy": "npm run build:mcp && wrangler deploy",
+    "build:webmcp": "node scripts/build-webmcp.mjs",
+    "build:mcp": "node scripts/build-mcp.mjs",
+    "verify:mcp": "node scripts/verify-mcp.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",
     "@mediapipe/tasks-vision": "^1.1.0",
+    "acorn": "8.19.0",
     "esbuild": "^0.28.2",
+    "eslint-scope": "8.4.0",
     "wrangler": "4.149.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@resvg/resvg-wasm": "2.6.2",
+    "zod": "4.6.6"
   }
 }
