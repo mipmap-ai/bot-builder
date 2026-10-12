@@ -9,6 +9,8 @@ let operation=0;
 let selected;
 let previewUrl;
 let busy=false;
+let matchOutcome="idle";
+let matchError=null;
 let cancelMatch;
 const dialog=document.createElement('dialog');
 dialog.className='photo-match-sheet';
@@ -36,14 +38,14 @@ const toast=document.createElement('div');toast.className='photo-match-toast';to
 let toastTimer;
 function showError(message){error.textContent=message;error.hidden=false;status.textContent='';}
 function setBusy(value){busy=value;create.disabled=value||!selected;create.textContent=value?'Matching photo…':'Create bot';input.disabled=value;dialog.querySelector('.photo-match-change').disabled=value;dialog.setAttribute('aria-busy',String(value));}
-function reset(){operation++;cancelMatch?.();cancelMatch=null;worker?.terminate();worker=null;selected=null;input.value='';preview.hidden=true;upload.hidden=false;image.removeAttribute('src');if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;status.textContent='';error.hidden=true;setBusy(false);}
+function reset(){if(busy&&matchOutcome==="matching")matchOutcome="cancelled";operation++;cancelMatch?.();cancelMatch=null;worker?.terminate();worker=null;selected=null;input.value='';preview.hidden=true;upload.hidden=false;image.removeAttribute('src');if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;status.textContent='';error.hidden=true;setBusy(false);}
 function close(){dialog.close();}
 dialog.querySelector('.photo-match-close').onclick=close;
 dialog.addEventListener('close',reset);
 dialog.addEventListener('click',event=>{if(event.target===dialog)close();});
 dialog.querySelector('.photo-match-change').onclick=()=>input.click();
 input.addEventListener('change',()=>{
- error.hidden=true;status.textContent='';const file=input.files?.[0];selected=null;create.disabled=true;
+ error.hidden=true;status.textContent='';matchOutcome='idle';matchError=null;const file=input.files?.[0];selected=null;create.disabled=true;
  if(!file)return;
  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){showError('Choose a JPG, PNG or WebP photo.');return;}
  if(file.size>12*1024*1024){showError('That photo is too large. Choose one smaller than 12 MB.');return;}
@@ -108,9 +110,10 @@ async function match(crops,groups,token){
   worker.postMessage({crops,groups});
  });
 }
-create.onclick=async()=>{
- if(busy||!selected)return;
- const token=++operation;setBusy(true);error.hidden=true;status.textContent='Finding the face…';let bitmap;
+export async function matchSelectedPhoto(){
+ if(busy)throw Error("Photo matching is already running.");
+ if(!selected)throw Error("Select a photo in the photo dialog first.");
+ const token=++operation;matchOutcome='matching';matchError=null;setBusy(true);error.hidden=true;status.textContent='Finding the face…';let bitmap;
  try{
   bitmap=await createImageBitmap(selected);if(token!==operation)return;
   const size=normalizeImageSize(bitmap.width,bitmap.height);const source=document.createElement('canvas');source.width=size.width;source.height=size.height;
@@ -157,14 +160,24 @@ create.onclick=async()=>{
   if(outfitColor)look.outfitColor=closestColor(outfitColor,photoCatalog.outfitColor.entries);
   photoStore.getState().load(parsePhotoLook(look));
   const names=['hair','hairColor','skin','accessory','beard'].map(key=>photoCatalog[key].entries.find(e=>e.id===look[key])?.label).filter(label=>label&&label!=='None');
-  close();toast.textContent=`Photo matched · ${names.join(' · ')}. Fine-tune any part or use Undo.`;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.hidden=true,10000);
- }catch(failure){if(token===operation)showError(failure.message||'Could not read that photo. Try another photo.');}
+  matchOutcome='complete';close();toast.textContent=`Photo matched · ${names.join(' · ')}. Fine-tune any part or use Undo.`;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.hidden=true,10000);
+  return {matched:true};
+ }catch(failure){if(token===operation){matchOutcome='failed';matchError=failure.message||'Could not read that photo. Try another photo.';showError(matchError);}throw failure;}
  finally{bitmap?.close();if(token===operation)setBusy(false);}
-};
+}
+create.onclick=()=>{void matchSelectedPhoto().catch(()=>{});};
+export function openPhotoMatch(){dialog.showModal();input.focus();return getPhotoMatchStatus();}
+export function getPhotoMatchStatus(){return {open:dialog.open,photoSelected:!!selected,busy,outcome:matchOutcome,...(matchError?{error:matchError}:{})};}
+export function startSelectedPhotoMatch(){
+ if(busy)throw Error('Photo matching is already running.');
+ if(!selected)throw Error('Select a photo in the photo dialog first.');
+ void matchSelectedPhoto().then(result=>{if(!result?.matched&&matchOutcome==='matching')matchOutcome='cancelled';}).catch(()=>{});
+ return {started:true,...getPhotoMatchStatus()};
+}
 function mount(){
  const actions=document.querySelector('.stage-actions');if(!actions||actions.querySelector('.photo-match-open'))return;
  const button=document.createElement('button');button.type='button';button.className='pill photo-match-open';button.setAttribute('aria-label','Create bot from photo');button.setAttribute('aria-haspopup','dialog');button.title='Create bot from photo';
  button.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 16 5-5 4 4 4-4 5 5"/></svg><span class="photo-match-label">Photo match</span>';
- button.onclick=()=>{dialog.showModal();input.focus();};actions.prepend(button);
+ button.onclick=openPhotoMatch;actions.prepend(button);
 }
 mount();new MutationObserver(mount).observe(document.getElementById('root'),{childList:true,subtree:true});

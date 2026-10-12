@@ -66,3 +66,11 @@ Run `npm ci`, `npm run check`, and `npm run deploy` with an authorized Cloudflar
 Cloudflare Workers Builds automatically deploys merged changes from `main`, after running `npm run check`. Preview builds are disabled. The Git connection and build commands are configured in the Cloudflare dashboard, not in GitHub Actions. See [AGENTS.md](AGENTS.md) for local setup, source builds, compatibility rules, deployment, rollback, and credential handling.
 
 The former Sites URL redirects to production using `legacy-site/index.js`, preserving each URL path and query string. Browsers also retain URL fragments across the HTTP redirect. The editor and its assets are served only from Cloudflare.
+
+## WebMCP site tools
+
+Supported browser agents can discover valid options, read or change the current bot, randomize, undo/redo, retrieve a share link, and download PNG or SVG exports. Changes use the existing editor state, option IDs, and URL serialization. Browsers without WebMCP retain the normal interface.
+
+Photo tools open the existing dialog and can start matching a photo already selected by the visitor. `match_selected_photo` returns immediately; poll `get_photo_match_status` for `complete`, `failed`, or `cancelled`, then read the bot. Photos stay on-device and are never included in tool results. These tools cannot select files or fetch photos from a URL.
+
+Rebuild the tool modules with `npm run build:webmcp`. Run `npm run check` and verify actual calls through the browser's WebMCP interface before merging.

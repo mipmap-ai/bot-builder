@@ -36,6 +36,9 @@ Feature source modules have explicit build commands. After editing one, rebuild 
 - `src/rabbit`: `npm run build:rabbit`
 - `src/formal`: `npm run build:formal`
 - `src/randomize`: `npm run build:randomize`
+- `src/webmcp`: `npm run build:webmcp`
+
+WebMCP registers through `document.modelContext` only in supported browsers. Its tools use the existing editor state and catalog. Preserve the named bridge exports in the captured editor bundle. After photo UI changes, rebuild the UI bundle with the esbuild command in `scripts/build-photo.mjs` (the full photo build also copies the model runtimes). Verify registration and actual tool calls in the in-app browser before deployment. Photo matching starts asynchronously; poll `get_photo_match_status` and read the current bot when complete. Tools must never accept arbitrary photo URLs or local file paths.
 
 Do not run unrelated rebuilds. Preserve existing URL IDs, defaults, and rendered avatars. Append new options. Replace or retire an option only when Brett explicitly asks; migrate its old URL value as requested. `character=muni` is the requested Penguin replacement. `held=sweet-potato` resolves to Nothing held. Keep existing avatar hash fixtures unchanged.
 
