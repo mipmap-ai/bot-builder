@@ -37,3 +37,10 @@ test('export tool validates format, dimensions, and unknown arguments before gen
 test('photo tools expose readiness without photo data and reject matching without selection',async()=>{
  const call=setup();assert.equal((await call('get_photo_match_status')).photoSelected,false);assert.equal((await call('open_photo_match')).open,true);assert.equal((await call('match_selected_photo')).isError,true);assert.equal((await call('get_current_bot',{extra:true})).isError,true);
 });
+
+test('photo tools and the manual picker import the same versioned module instance',async()=>{
+ const html=await readFile(new URL('../dist/client/index.html',import.meta.url),'utf8');
+ const ui=await readFile(new URL('../src/webmcp/ui.mjs',import.meta.url),'utf8');
+ const photoUrl=html.match(/src="([^\"]*photo\/ui\.js[^\"]*)"/)[1];
+ assert.ok(ui.includes("from '"+photoUrl+"'"));
+});

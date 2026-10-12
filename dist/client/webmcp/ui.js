@@ -1,6 +1,6 @@
 import {photoStore,photoCatalog,parsePhotoLook,toBotSpec,disabledBotFields,serializeBotLook} from '/assets/index-RLaEwmsK.js';
 import {n as exports,r as svgToPng} from '/assets/export-6cYnj8PJ.js';
-import {openPhotoMatch,getPhotoMatchStatus,startSelectedPhotoMatch} from '/photo/ui.js';
+import {openPhotoMatch,getPhotoMatchStatus,startSelectedPhotoMatch} from '/photo/ui.js?v=2';
 import {createTools} from './tools.mjs';
 
 const settle=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
