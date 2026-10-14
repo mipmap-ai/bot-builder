@@ -35,6 +35,7 @@ Feature source modules have explicit build commands. After editing one, rebuild 
 - `src/photo`: `npm run build:photo`
 - `src/rabbit`: `npm run build:rabbit`
 - `src/formal`: `npm run build:formal`
+- `src/world`: `npm run build:world`
 - `src/randomize`: `npm run build:randomize`
 - `src/webmcp`: `npm run build:webmcp`
 - `src/mcp`: `npm run build:mcp` (also run automatically by check and deploy)
@@ -81,3 +82,9 @@ For per-ticket worktrees on Brett's machine, use `~/.codex/bin/agent-worktree <i
 The public Streamable HTTP endpoint is `https://botbuilder.mipmap.ai/mcp`. Keep this route in `assets.run_worker_first`. The stateless server uses the same catalog, serializer, migrations, and SVG geometry as the editor. Its generated modules and static resvg WASM live under `dist/server` and are ignored by Git; the Cloudflare build recreates them. Never expose feedback storage or secrets through MCP. Photo matching stays on-device.
 
 Before publishing MCP changes, run `npm run check`, start `npx wrangler dev --port 8787`, then run `npm run verify:mcp`. Check `npx wrangler deploy --dry-run` for upload limits. After the merged commit deploys, run `npm run verify:mcp -- https://botbuilder.mipmap.ai`. Verify the Cloudflare build corresponds to that merge commit. Wait for both GitHub CodeQL checks to pass before merging.
+
+## Modular world clothing
+
+World clothes are individual outfit options, not saved avatar presets. Headwear, hair ornaments, and jewelry are independent groups under Extras. Their empty defaults do not replace legacy accessory selections. The shared selection helper clears only a conflicting slot when a visitor changes a control. Preserve existing catalog IDs and artwork. Retired trial outfit URLs migrate to curated counterparts.
+
+Hair fit numbers must exactly match the canonical native reference; rounded values disable its shape deformation lookup. Earrings follow the renderer's live ear centers. Validate all four head shapes at Small/Medium/Large and all eight frames when changing these parts. The test suite enforces canonical fit values, stud attachment, garment recoloring, accessory combinations, and legacy image hashes. Rebuild world modules before MCP to keep both rendering paths in sync.

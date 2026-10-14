@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
-    "check": "npm run build:mcp && node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs && node --test scripts/webmcp.test.mjs && node --test scripts/mcp.test.mjs",
+    "check": "npm run build:mcp && node scripts/check.mjs && node --test scripts/photo-match.test.mjs && node --test scripts/rabbit-compatibility.test.mjs && node --test scripts/randomize.test.mjs && node --test scripts/webmcp.test.mjs && node --test scripts/mcp.test.mjs && node --test scripts/world-parts.test.mjs",
     "build:photo": "node scripts/build-photo.mjs",
     "build:rabbit": "node scripts/build-rabbit.mjs",
     "build:formal": "node scripts/build-formal.mjs",
@@ -12,7 +12,8 @@
     "deploy": "npm run build:mcp && wrangler deploy",
     "build:webmcp": "node scripts/build-webmcp.mjs",
     "build:mcp": "node scripts/build-mcp.mjs",
-    "verify:mcp": "node scripts/verify-mcp.mjs"
+    "verify:mcp": "node scripts/verify-mcp.mjs",
+    "build:world": "node scripts/build-world.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "^4.3.1",
