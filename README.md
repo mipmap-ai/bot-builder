@@ -115,3 +115,11 @@ npm run verify:mcp -- https://botbuilder.mipmap.ai
 ```
 
 This uses an actual MCP client and checks every tool, legacy links, both export formats and sizes, rejected inputs, origin protection, and existing site routes. The SVG/PNG API accepts only catalog selections and bounded sizes. It never renders caller-supplied SVG.
+
+## World clothing and accessories
+
+The Outfit selector adds 12 distinct garments: Thai Chakri, Sari, Kimono, Hanbok, Qipao, Bunad, Flamenco dress, Andean jacket, Kaftan, Kente wrap, Maasai shuka, and Puletasi. The existing garments remain available. Six new fabric colors are appended.
+
+Hair adds Neat bun, Braided updo, Twin braids, and Side braid. Extras adds separate Headwear, Hair ornaments, and Jewelry selectors for hats, flowers, a gold hairpin, earrings, necklaces, and a brooch. You can mix these with any available clothing and character. No new complete-look presets are added.
+
+All pieces use the existing renderer, thumbnail controls, undo/redo, URL serialization, randomizer, WebMCP, and hosted MCP. Old links retain their artwork. URLs for retired trial garments resolve to the retained counterpart. Source is in `src/world`; run `npm run build:world` after edits and commit the generated browser modules.

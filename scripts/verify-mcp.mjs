@@ -8,6 +8,13 @@ try{
  const tools=(await client.listTools()).tools;assert.equal(tools.length,6);
  const call=async(name,args={})=>{const response=await client.callTool({name,arguments:args});assert.ok(!response.isError,JSON.stringify(response));return JSON.parse(response.content[0].text);};
  const options=await call('get_bot_options');assert.ok(options.options.outfit.entries.some(e=>e.id==='tuxedo'));assert.deepEqual(options.options.held.entries.map(e=>e.id),['none']);
+ assert.equal(options.options.outfit.entries.filter(e=>['thai-chakri','sari','kimono','hanbok','qipao','bunad','flamenco','andean-jacket','kaftan','kente-wrap','maasai-shuka','puletasi'].includes(e.id)).length,12);
+ assert.ok(!options.options.outfit.entries.some(e=>['tartan-vest','charro'].includes(e.id)));
+ const world=await call('create_bot',{selections:{head:'squircle',hair:'twin-braids',outfit:'bunad',outfitColor:'cobalt',headwear:'lace-bonnet',hairOrnament:'gold-earrings',jewelry:'silver-brooch',frame:'front-center'}});
+ const worldExport=await call('export_bot',{url:world.url,format:'png',size:1024});
+ const worldPath=new URL(worldExport.downloadUrl);const worldResponse=await fetch(new URL(worldPath.pathname+worldPath.search,base));assert.equal(worldResponse.status,200);
+ const worldImage=Buffer.from(await worldResponse.arrayBuffer());assert.equal(worldImage.readUInt32BE(16),1024);
+ assert.equal((await call('get_bot_share_link',{url:'?outfit=tartan-vest'})).selections.outfit,'bunad');
  const created=await call('create_bot',{selections:{character:'rabbit',eyeColor:'blue',outfit:'tuxedo',frame:'front-center'}});
  assert.equal(created.url,'https://botbuilder.mipmap.ai/?character=rabbit&eyeColor=blue&outfit=tuxedo&frame=front-center');
  const edit=await call('edit_bot',{url:created.url,selections:{eyeColor:'green'}});assert.equal(edit.selections.eyeColor,'green');
